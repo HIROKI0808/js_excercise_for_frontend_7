@@ -14,9 +14,22 @@
   //     - resultsプロパティ(配列)の中に含まれている10件のデータ(オブジェクト)をforEachで取得する
   //       - 「◯件目のクイズデータ」をli要素として追加する
   //       - buildQuizList関数の戻り値(ul要素のDOM)をli要素に追加する。(結果としてネスト(入れ子)構造のリストになる)
+  fetch(API_URL)
+    .then(res => res.json())
+    .then(data => {
+      const ulQuizDataContainer = document.getElementById('quiz-list');
+      
+      data.results.forEach((quiz, index) => {
+        const liQuizDataElement = document.createElement('li');
+        liQuizDataElement.textContent = `${index + 1}件目のクイズデータ`;
+        ulQuizDataContainer.appendChild(liQuizDataElement);
 
+        const ulQuizItemContainer = buildQuizList(quiz);
+        liQuizDataElement.appendChild(ulQuizItemContainer);
+      });
+    });
 
-  // `buildQuizList関数` を実装する
+    // `buildQuizList関数` を実装する
   //   - 実装する内容
   //     - 引数で受けとったクイズデータを使ってul要素にクイズ情報を追加する
   //     - クイズ情報を表示する際は以下の仕様で実装する
@@ -29,5 +42,15 @@
   //    - quiz : オブジェクト(クイズデータ)
   //  - 戻り値
   //    - ul要素のDOM
+  function buildQuizList(quiz) {
+    const ulQuizItemElement = document.createElement('ul');
+    for (const key in quiz) {
+      const liQuizItemElement = document.createElement('li');
+      liQuizItemElement.innerHTML = `<strong>${key}</strong> : ${quiz[key]}`;
+      ulQuizItemElement.appendChild(liQuizItemElement);
+    }
+
+    return ulQuizItemElement;
+  }
 
 })();
